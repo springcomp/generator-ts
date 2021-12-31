@@ -41,9 +41,6 @@ export class App extends Generator {
 	}
 
 	public async default() {
-		this.log(this.options);
-		this.log(this.options["skip-install"]);
-
 		this.composeWith(require.resolve('generator-node/generators/app'), {
 			boilerplate: false,
 			name: this.options.name,
