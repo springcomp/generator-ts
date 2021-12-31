@@ -12,60 +12,60 @@ import { Utils } from "../utils/utils";
 
 export class App extends Generator {
 
-	options: AppOptions = new AppOptions();
-	answers: AppAnswers = new AppAnswers();
+  options: AppOptions = new AppOptions();
+  answers: AppAnswers = new AppAnswers();
 
-	public constructor(args: string[], opts: AppOptions) {
-		super(args, opts);
+  public constructor(args: string[], opts: AppOptions) {
+    super(args, opts);
 
-		this.option('skip-install', { type: Boolean, description: "Do not automatically install dependencies", });
-	}
+    this.option('skip-install', { type: Boolean, description: "Do not automatically install dependencies", });
+  }
 
-	public async prompting() {
+  public async prompting() {
 
-		const result = await askName(
-			{
-				name: 'name',
-				message: 'Project name',
-				default: Utils.makeGeneratorName(path.basename(process.cwd())),
-				filter: Utils.makeGeneratorName,
-				validate: str => {
-					return str.length > 'generator-'.length;
-				}
-			},
-			inquirer
-		);
+    const result = await askName(
+      {
+        name: 'name',
+        message: 'Project name',
+        default: Utils.makeGeneratorName(path.basename(process.cwd())),
+        filter: Utils.makeGeneratorName,
+        validate: str => {
+          return str.length > 'generator-'.length;
+        }
+      },
+      inquirer
+    );
 
-		this.options.name = result.name;
-		Object.assign(this.options, Utils.parseScopedName(result.name));
-	}
+    this.options.name = result.name;
+    Object.assign(this.options, Utils.parseScopedName(result.name));
+  }
 
-	public async default() {
-		this.composeWith(require.resolve('generator-node/generators/app'), {
-			boilerplate: false,
-			name: this.options.name,
-			projectRoot: 'generators',
-			skipInstall: this.options["skip-install"],
-		});
-	}
+  public async default() {
+    this.composeWith(require.resolve('generator-node/generators/app'), {
+      boilerplate: false,
+      name: this.options.name,
+      projectRoot: 'generators',
+      skipInstall: this.options["skip-install"],
+    });
+  }
 
-	public async writing() {
+  public async writing() {
 
-		// add tsconfig.json
+    // add tsconfig.json
 
-		const tsConfig = this.fs.read(this.templatePath('tsconfig.json'), {});
-		this.fs.write(this.destinationPath('tsconfig.json'), tsConfig);
+    const tsConfig = this.fs.read(this.templatePath('tsconfig.json'), {});
+    this.fs.write(this.destinationPath('tsconfig.json'), tsConfig);
 
-		// install TypeScript as a dev dependency
+    // install TypeScript as a dev dependency
 
-		const pkg = this.fs.readJSON(this.destinationPath('package.json'), {});
+    const pkg = this.fs.readJSON(this.destinationPath('package.json'), {});
 
-		extend(pkg, {
-			devDependencies: {
-				'typescript': '^4.5.4',
-			}
-		});
+    extend(pkg, {
+      devDependencies: {
+        'typescript': '^4.5.4',
+      }
+    });
 
-		this.fs.writeJSON(this.destinationPath('package.json'), pkg);
-	}
+    this.fs.writeJSON(this.destinationPath('package.json'), pkg);
+  }
 }
