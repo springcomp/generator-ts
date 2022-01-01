@@ -8,7 +8,7 @@ import path = require("path");
 
 import { AppAnswers } from "./AppAnswers";
 import { AppOptions } from "./AppOptions";
-import { Utils } from "../utils/utils";
+import { Utils } from "../utils/Utils";
 
 export class App extends Generator {
 
