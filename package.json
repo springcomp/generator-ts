@@ -1,13 +1,29 @@
 {
   "name": "generator-ts",
   "version": "0.1.0",
-  "description": "",
+  "description": "Yeoman generator that creates an empty TypeScript project.",
+  "author": {
+    "name": "Springcomp",
+    "email": "springcomp@users.no-reply.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/springcomp/generator-ts.git"
+  },
+  "license": "Apache License 2.0",
   "files": [
     "generators"
   ],
   "keywords": [
     "yeoman-generator"
   ],
+  "scripts": {
+    "build": "npm run clean && tsc --project . --outDir ./dist/generators/",
+    "clean": "rm -rf ./dist/",
+    "install": "npm run build && npm run _boilerplate-files && npm run _clear-package-json",
+    "_boilerplate-files": "cp LICENSE README.md ./dist/generators/",
+    "_clear-package-json": "npx clear-package-json package.json --output ./dist/generators/package.json"
+  },
   "dependencies": {
     "deep-extend": "^0.6.0",
     "generator-node": "^2.8.0",
@@ -22,6 +38,7 @@
     "@types/lodash": "^4.14.178",
     "@types/mkdirp": "^1.0.2",
     "@types/yeoman-generator": "^5.2.8",
+    "clean-publish": "^3.4.4",
     "typescript": "^4.5.4"
   }
 }
