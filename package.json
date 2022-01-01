@@ -21,8 +21,8 @@
     "build": "tsc --project . --outDir ./dist/generators/",
     "clean": "rm -rf ./dist/",
     "install": "npm run build && npm run _boilerplate-files && npm run _clear-package-json",
-    "_boilerplate-files": "cp LICENSE README.md ./dist/generators/",
-    "_clear-package-json": "npx clear-package-json package.json --output ./dist/generators/package.json"
+    "_boilerplate-files": "cp LICENSE README.md ./dist/",
+    "_clear-package-json": "npx clear-package-json package.json --output ./dist/package.json"
   },
   "dependencies": {
     "deep-extend": "^0.6.0",
