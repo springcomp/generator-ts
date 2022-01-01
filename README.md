@@ -6,7 +6,7 @@ This is a Yeoman generator that creates a simple TypeScript project.
 
 ```bash
 Usage:
-  yo ts [options]
+  yo @springcomp/ts [options]
 
 Options:
   -h,   --help           # Print the generator's options and usage
