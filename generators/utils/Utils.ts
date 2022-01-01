@@ -1,17 +1,19 @@
 import * as _ from "lodash";
 
-export class ParseResult {
+export class ModuleName {
   scopeName: string;
   localName: string;
+  repositoryName: string;
 }
 
 export class Utils {
 
-  public static parseScopedName(name: string): ParseResult {
+  public static parseScopedName(name: string): ModuleName {
     const nameFragments = name.split('/');
-    const parseResult: ParseResult = {
+    const parseResult: ModuleName = {
       scopeName: '',
-      localName: name
+      localName: name,
+      repositoryName: '',
     };
 
     if (nameFragments.length > 1) {
@@ -22,11 +24,25 @@ export class Utils {
     return parseResult;
   }
 
-  public static makeGeneratorName(name: string): string {
-    const parsedName = Utils.parseScopedName(name);
-    name = parsedName.localName;
-    name = _.kebabCase(name);
-    name = name.indexOf('generator-') === 0 ? name : 'generator-' + name;
-    return parsedName.scopeName ? `${parsedName.scopeName}/${name}` : name;
+  public static makeModuleName(name: string, repositoryName: string): ModuleName {
+
+    const moduleName: ModuleName = {
+      localName: '',
+      scopeName: '',
+      repositoryName: repositoryName,
+    };
+
+    if (name.startsWith('@')) {
+      const scopedName = Utils.parseScopedName(name);
+      Object.assign(moduleName, scopedName);
+    } else {
+      moduleName.localName = name;
+    }
+
+    if (!moduleName.repositoryName) {
+      moduleName.repositoryName = moduleName.localName;
+    }
+
+    return moduleName;
   }
 }
