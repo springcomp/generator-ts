@@ -74,8 +74,6 @@ export class App extends Generator {
       skipInstall: this.options["skip-install"],
     }
 
-    this.log(options);
-
     this.composeWith(require.resolve('generator-node/generators/app'), this.options);
   }
 
