@@ -1,5 +1,9 @@
 import * as _ from "lodash";
 
+import askName = require("inquirer-npm-name");
+import inquirer = require("inquirer");
+import path = require("path");
+
 export class ModuleName {
   scopeName: string;
   localName: string;
@@ -44,5 +48,16 @@ export class Utils {
     }
 
     return moduleName;
+  }
+
+  public static async askForProjectName(): Promise<{ [key: string]: string }> {
+    return await askName(
+      {
+        name: 'name',
+        message: 'Project name',
+        default: path.basename(process.cwd()),
+      },
+      inquirer
+    );
   }
 }

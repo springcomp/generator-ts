@@ -1,9 +1,6 @@
 import * as _ from "lodash";
 import * as Generator from "yeoman-generator";
-import askName = require("inquirer-npm-name");
 const extend = require('deep-extend');
-import inquirer = require("inquirer");
-import path = require("path");
 import validatePackageName = require('validate-npm-package-name');
 
 import { AppAnswers } from "./AppAnswers";
@@ -18,12 +15,12 @@ export class App extends Generator {
   public constructor(args: string[], opts: AppOptions) {
     super(args, opts);
 
-    this.option('travis', { type: String, description: "Include travis config", default: true });
-    this.option('boilerplate', { type: String, description: "Include boilerplate files", default: true });
-    this.option('cli', { type: String, description: "Add a CLI", default: false });
-    this.option('coveralls', { type: String, description: "Include coveralls config", });
-    this.option('editorconfig', { type: String, description: "Include editorconfig config", default: true });
-    this.option('license', { type: String, description: "Include license config", default: true });
+    this.option('travis', { type: Boolean, description: "Include travis config", default: true });
+    this.option('boilerplate', { type: Boolean, description: "Include boilerplate files", default: true });
+    this.option('cli', { type: Boolean, description: "Add a CLI", default: false });
+    this.option('coveralls', { type: Boolean, description: "Include coveralls config", });
+    this.option('editorconfig', { type: Boolean, description: "Include editorconfig config", default: true });
+    this.option('license', { type: Boolean, description: "Include license config", default: true });
     this.option('name', { type: String, description: "Project name", });
     this.option('githubaccount', { type: String, description: "GitHub username or organization", });
     this.option('repositoryName', { type: String, description: "Name of the GitHub repository", });
@@ -48,8 +45,8 @@ export class App extends Generator {
 
   public async prompting() {
 
-    if (!this.options.name) {
-      const result = await this.askForProjectName();
+    if (this.options.name === undefined || this.options.name === '') {
+      const result = await Utils.askForProjectName();
       this.options.name = result.name;
     }
 
@@ -62,7 +59,7 @@ export class App extends Generator {
 
   public async default() {
 
-    this.composeWith(require.resolve('generator-node/generators/app'), {
+    const options = {
       travis: this.options.travis,
       boilerplate: this.options.boilerplate,
       cli: this.options.cli,
@@ -72,10 +69,14 @@ export class App extends Generator {
       name: this.options.name,
       githubAccount: this.options.githubAccount,
       repositoryName: this.options.repositoryName,
-      projectRoot: 'generators',
+      projectRoot: this.options.projectRoot,
       readme: this.options.readme,
       skipInstall: this.options["skip-install"],
-    });
+    }
+
+    this.log(options);
+
+    this.composeWith(require.resolve('generator-node/generators/app'), this.options);
   }
 
   public async writing() {
@@ -96,16 +97,5 @@ export class App extends Generator {
     });
 
     this.fs.writeJSON(this.destinationPath('package.json'), pkg);
-  }
-
-  private async askForProjectName(): Promise<{ [key: string]: string }> {
-    return await askName(
-      {
-        name: 'name',
-        message: 'Project name',
-        default: path.basename(process.cwd()),
-      },
-      inquirer
-    );
   }
 }
