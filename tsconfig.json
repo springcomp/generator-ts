@@ -11,6 +11,8 @@
     "target": "es2017",
   },
   "exclude": [
+    "dist",
+    "generators/app/templates",
     "node_modules",
     "**/*.spec.ts",
   ]

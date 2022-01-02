@@ -59,10 +59,12 @@ export class App extends Generator {
 
   public async default() {
 
+    // we handle --cli and --boilerplate ourselves
+
     const options = {
       travis: this.options.travis,
-      boilerplate: this.options.boilerplate,
-      cli: this.options.cli,
+      boilerplate: false,
+      cli: false,
       coveralls: this.options.coveralls,
       editorconfig: this.options.editorconfig,
       license: this.options.license,
@@ -74,7 +76,7 @@ export class App extends Generator {
       skipInstall: this.options["skip-install"],
     }
 
-    this.composeWith(require.resolve('generator-node/generators/app'), this.options);
+    this.composeWith(require.resolve('generator-node/generators/app'), options);
   }
 
   public async writing() {
@@ -91,8 +93,33 @@ export class App extends Generator {
     extend(pkg, {
       devDependencies: {
         'typescript': '^4.5.4',
+        '@types/node': '^17.0.6'
       }
     });
+
+    // handle --cli
+
+    if (this.options.cli) {
+      const clits = this.fs.read(this.templatePath('lib/cli.ts'));
+      this.fs.write(this.destinationPath('lib/cli.ts'), clits);
+
+      // the --cli sample uses meow@10.1.2 which uses 'import.meta'.
+      // this requires setting package.json => "type": "module"
+      // this also requires targetting tsconfig.json => "target": "esnext", "module": "esnext", "moduleResolution": "node"
+      // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-9.html#support-for-importmeta 
+
+      extend(pkg, {
+        type: 'module',
+        dependencies: {
+          'meow': '^10.1.2'
+        }
+      })
+
+      const tsConfigCli = this.fs.read(this.templatePath('tsconfig_cli.json'), {});
+      this.fs.write(this.destinationPath('tsconfig.json'), tsConfigCli);
+    }
+
+    // handle --boilerplate
 
     this.fs.writeJSON(this.destinationPath('package.json'), pkg);
   }
