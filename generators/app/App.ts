@@ -22,7 +22,7 @@ export class App extends Generator {
     this.option('editorconfig', { type: Boolean, description: "Include editorconfig config", default: true });
     this.option('license', { type: Boolean, description: "Include license config", default: true });
     this.option('name', { type: String, description: "Project name", });
-    this.option('githubaccount', { type: String, description: "GitHub username or organization", });
+    this.option('githubAccount', { type: String, description: "GitHub username or organization", default: '' });
     this.option('repositoryName', { type: String, description: "Name of the GitHub repository", });
     this.option('projectRoot', { type: String, description: "Relative path to the project code root", default: "lib" });
     this.option('readme', { type: String, description: "Content to insert in the README.md file", });
@@ -75,6 +75,8 @@ export class App extends Generator {
       readme: this.options.readme,
       skipInstall: this.options["skip-install"],
     }
+
+    this.log(options);
 
     this.composeWith(require.resolve('generator-node/generators/app'), options);
   }
