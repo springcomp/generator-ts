@@ -88,6 +88,19 @@ export class App extends Generator {
     const tsConfig = this.fs.read(this.templatePath('tsconfig.json'), {});
     this.fs.write(this.destinationPath('tsconfig.json'), tsConfig);
 
+    // update .gitignore
+
+    var gitIgnoreOrig = this.fs.read(this.destinationPath('.gitignore'), {});
+    const gitIgnoreUpdated = `${gitIgnoreOrig}
+dist/
+\.js
+\.js\.map
+`;
+
+    this.fs.write(this.destinationPath('.gitignore'), gitIgnoreUpdated);
+    
+
+
     // install TypeScript as a dev dependency
 
     const pkg = this.fs.readJSON(this.destinationPath('package.json'), {});
