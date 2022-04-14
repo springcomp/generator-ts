@@ -1,6 +1,6 @@
 {
   "name": "@springcomp/generator-ts",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "Yeoman generator that creates an empty TypeScript project.",
   "author": {
     "name": "Springcomp",
